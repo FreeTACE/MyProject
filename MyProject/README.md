@@ -112,17 +112,6 @@ STATIC_URL и MEDIA_URL — при необходимости.
 
 TEMPLATES — уже настроены для использования папки templates/.
 
-🤝 Как внести вклад
-1) Форкните проект.
-
-2) Создайте ветку для новой функции (git checkout -b feature/AmazingFeature).
-
-3) Зафиксируйте изменения (git commit -m 'Add some AmazingFeature').
-
-4) Отправьте ветку (git push origin feature/AmazingFeature).
-
-5) Откройте Pull Request.
-
 📞 Контакты
 Ваше Имя — @leodance28 — телеграм
 
