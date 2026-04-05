@@ -1,0 +1,54 @@
+{% extends 'trening/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'trening:home' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'trening:categories_list' %}">Темы</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'trening:category_detail' category.slug %}">{{ category.name }}</a></li>
+            <li class="breadcrumb-item active">{{ lesson.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="mb-4">
+        <h1>{{ lesson.name }}</h1>
+        <p class="lead">{{ lesson.description }}</p>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            {{ lesson.content|linebreaks }}
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>
+            {% if prev_lesson %}
+            <a href="{% url 'trening:lesson_detail' category.slug prev_lesson.slug %}" class="btn btn-secondary">
+                ← {{ prev_lesson.name }}
+            </a>
+            {% endif %}
+        </div>
+
+        <div>
+            <a href="{% url 'trening:lesson_cards' category.slug lesson.slug %}" class="btn btn-info">
+                Карточки ({{ cards_count }})
+            </a>
+            <a href="{% url 'trening:quiz' lesson.id %}" class="btn btn-success">
+                Пройти тест
+            </a>
+        </div>
+
+        <div>
+            {% if next_lesson %}
+            <a href="{% url 'trening:lesson_detail' category.slug next_lesson.slug %}" class="btn btn-primary">
+                {{ next_lesson.name }} →
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

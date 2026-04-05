@@ -1,0 +1,73 @@
+{% extends 'trening/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">{{ title }}</h1>
+    
+    <div class="row">
+        {% for card in cards %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <strong>{{ card.lesson.category.name }} / {{ card.lesson.name }}</strong>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Вопрос:</h5>
+                    <p class="card-text">{{ card.question }}</p>
+                    <button class="btn btn-sm btn-outline-primary" onclick="toggleAnswer({{ card.id }})">
+                        Показать ответ
+                    </button>
+                    <div id="answer-{{ card.id }}" style="display: none;" class="mt-3">
+                        <h6>Ответ:</h6>
+                        <p class="card-text bg-light p-3 rounded">{{ card.answer }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <div class="alert alert-info">
+                <p class="mb-0">Пока нет доступных карточек</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if cards.has_other_pages %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if cards.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ cards.previous_page_number }}">Предыдущая</a>
+            </li>
+            {% endif %}
+            
+            {% for num in cards.paginator.page_range %}
+            <li class="page-item {% if cards.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            
+            {% if cards.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ cards.next_page_number }}">Следующая</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<script>
+function toggleAnswer(cardId) {
+    const answerDiv = document.getElementById(`answer-${cardId}`);
+    if (answerDiv.style.display === 'none') {
+        answerDiv.style.display = 'block';
+    } else {
+        answerDiv.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

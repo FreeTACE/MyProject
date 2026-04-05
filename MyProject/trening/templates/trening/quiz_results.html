@@ -1,0 +1,80 @@
+{% extends 'trening/base.html' %}
+
+{% block title %}Результаты теста{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'trening:home' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'trening:category_detail' lesson.category.slug %}">{{ lesson.category.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'trening:lesson_detail' lesson.category.slug lesson.slug %}">{{ lesson.name }}</a></li>
+            <li class="breadcrumb-item active">Результаты</li>
+        </ol>
+    </nav>
+
+    <div class="text-center mb-5">
+        <h1>Результаты теста</h1>
+        <div class="display-4 mb-3">{{ percentage|floatformat:1 }}%</div>
+        <div class="progress mb-3" style="height: 30px;">
+            <div class="progress-bar {% if percentage >= 70 %}bg-success{% elif percentage >= 50 %}bg-warning{% else %}bg-danger{% endif %}" 
+                 role="progressbar" 
+                 style="width: {{ percentage }}%;" 
+                 aria-valuenow="{{ percentage }}" 
+                 aria-valuemin="0" 
+                 aria-valuemax="100">
+                {{ percentage|floatformat:0 }}%
+            </div>
+        </div>
+        <p class="lead">Вы набрали {{ score }} из {{ total }} баллов</p>
+        {% if percentage >= 70 %}
+        <div class="alert alert-success">Отлично! Вы хорошо усвоили материал!</div>
+        {% elif percentage >= 50 %}
+        <div class="alert alert-warning">Неплохо, но есть над чем поработать!</div>
+        {% else %}
+        <div class="alert alert-danger">Рекомендуем повторить материал еще раз!</div>
+        {% endif %}
+    </div>
+
+    <h2 class="mb-4">Детальный разбор</h2>
+    
+    {% for result in results %}
+    <div class="card mb-3 {% if result.is_correct %}border-success{% else %}border-danger{% endif %}">
+        <div class="card-header {% if result.is_correct %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
+            <strong>Вопрос {{ forloop.counter }}</strong>
+            {% if result.is_correct %}
+            <span class="badge bg-light text-success float-end">✓ Правильно</span>
+            {% else %}
+            <span class="badge bg-light text-danger float-end">✗ Неправильно</span>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ result.card.question }}</h5>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <strong>Ваш ответ:</strong>
+                    <p class="{% if result.is_correct %}text-success{% else %}text-danger{% endif %}">
+                        {{ result.user_answer|default:"(ответ не указан)" }}
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Правильный ответ:</strong>
+                    <p class="text-success">{{ result.card.answer }}</p>
+                </div>
+            </div>
+            {% if result.card.hint %}
+            <div class="alert alert-info mt-3">
+                <strong>Подсказка:</strong> {{ result.card.hint }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    
+    <div class="text-center mt-4">
+        <a href="{% url 'trening:quiz' lesson.id %}" class="btn btn-primary">Пройти тест заново</a>
+        <a href="{% url 'trening:lesson_detail' lesson.category.slug lesson.slug %}" class="btn btn-secondary">Вернуться к уроку</a>
+        <a href="{% url 'trening:lesson_cards' lesson.category.slug lesson.slug %}" class="btn btn-info">Повторить карточки</a>
+    </div>
+</div>
+{% endblock %}

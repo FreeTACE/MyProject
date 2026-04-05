@@ -1,0 +1,45 @@
+{% extends 'trening/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'trening:home' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'trening:categories_list' %}">Темы</a></li>
+            <li class="breadcrumb-item active">{{ category.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="mb-5">
+        <h1>{{ category.name }}</h1>
+        <p class="lead">{{ category.description }}</p>
+    </div>
+
+    <h2 class="mb-4">Уроки в этой теме</h2>
+    
+    <div class="row">
+        {% for lesson in lessons %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ lesson.name }}</h5>
+                    <p class="card-text">{{ lesson.description|truncatewords:30 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-info">{{ lesson.cards.count }} карточек</span>
+                        <a href="{% url 'trening:lesson_detail' category.slug lesson.slug %}" class="btn btn-primary">Начать урок</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <div class="alert alert-info">
+                <p class="mb-0">В этой теме пока нет уроков</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

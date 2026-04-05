@@ -1,0 +1,56 @@
+{% extends 'trening/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'trening:home' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'trening:category_detail' lesson.category.slug %}">{{ lesson.category.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'trening:lesson_detail' lesson.category.slug lesson.slug %}">{{ lesson.name }}</a></li>
+            <li class="breadcrumb-item active">Тест</li>
+        </ol>
+    </nav>
+
+    <div class="text-center mb-5">
+        <h1>Тест: {{ lesson.name }}</h1>
+        <p class="lead">Ответьте на вопросы, чтобы проверить свои знания</p>
+        <p>Всего вопросов: {{ cards|length }}</p>
+    </div>
+
+    <form method="post" class="mb-5">
+        {% csrf_token %}
+
+        {% for card in cards %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <strong>Вопрос {{ forloop.counter }} из {{ cards|length }}</strong>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title mb-4">{{ card.question }}</h5>
+                <div class="form-group">
+                    <label for="answer_{{ card.id }}" class="form-label">Ваш ответ:</label>
+                    <textarea
+                        class="form-control"
+                        id="answer_{{ card.id }}"
+                        name="answer_{{ card.id }}"
+                        rows="3"
+                        placeholder="Введите ваш ответ здесь..."
+                        required
+                    ></textarea>
+                </div>
+                {% if card.hint %}
+                <small class="text-muted mt-2 d-block">Подсказка: {{ card.hint }}</small>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success btn-lg">Проверить ответы</button>
+            <a href="{% url 'trening:lesson_detail' lesson.category.slug lesson.slug %}" class="btn btn-secondary btn-lg">Вернуться к уроку</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

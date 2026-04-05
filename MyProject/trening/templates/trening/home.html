@@ -1,0 +1,75 @@
+{% extends 'trening/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Добро пожаловать в систему обучения!</h1>
+        <p class="lead">Изучайте новые темы, проходите уроки и тренируйтесь с карточками</p>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h3 class="card-title">{{ total_lessons }}</h3>
+                    <p class="card-text">Всего уроков</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h3 class="card-title">{{ total_cards }}</h3>
+                    <p class="card-text">Всего карточек</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h3 class="card-title">{{ categories|length }}</h3>
+                    <p class="card-text">Тем для изучения</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <h2 class="mb-4">Популярные темы</h2>
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    {% if category.image %}
+                    <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <p class="card-text">{{ category.description|truncatewords:20 }}</p>
+                        <a href="{% url 'trening:category_detail' category.slug %}" class="btn btn-primary">Перейти</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div>
+        <h2 class="mb-4">Новые уроки</h2>
+        <div class="list-group">
+            {% for lesson in recent_lessons %}
+            <a href="{% url 'trening:lesson_detail' lesson.category.slug lesson.slug %}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ lesson.name }}</h5>
+                    <small>{{ lesson.created_at|date:"d.m.Y" }}</small>
+                </div>
+                <p class="mb-1">{{ lesson.description|truncatewords:30 }}</p>
+                <small>Тема: {{ lesson.category.name }}</small>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

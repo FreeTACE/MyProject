@@ -1,0 +1,101 @@
+{% extends 'trening/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'trening:home' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'trening:category_detail' category.slug %}">{{ category.name }}</a></li>
+            <li class="breadcrumb-item active">{{ lesson.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Карточки: {{ lesson.name }}</h1>
+        <a href="{% url 'trening:quiz' lesson.id %}" class="btn btn-success">Пройти тест</a>
+    </div>
+
+    {% if cards %}
+    <div class="row">
+        {% for card in cards %}
+        <div class="col-md-6 mb-4">
+            <div class="card flashcard" onclick="this.classList.toggle('flipped')">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front card-body">
+                        <h5 class="card-title">Вопрос</h5>
+                        <p class="card-text">{{ card.question }}</p>
+                        {% if card.hint %}
+                        <small class="text-muted">Подсказка: {{ card.hint }}</small>
+                        {% endif %}
+                        <button class="btn btn-sm btn-outline-secondary mt-3">Нажмите для ответа</button>
+                    </div>
+                    <div class="flashcard-back card-body bg-light">
+                        <h5 class="card-title">Ответ</h5>
+                        <p class="card-text">{{ card.answer }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <p class="mb-0">В этом уроке пока нет карточек</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.flashcard {
+    cursor: pointer;
+    transition: transform 0.3s;
+    min-height: 250px;
+    position: relative;
+    perspective: 1000px;
+}
+
+.flashcard .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
+
+.flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.flashcard-back {
+    transform: rotateY(180deg);
+}
+
+.flashcard:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+</style>
+
+<script>
+// Добавляем обработчики для карточек
+document.querySelectorAll('.flashcard').forEach(card => {
+    card.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.classList.toggle('flipped');
+    });
+});
+</script>
+{% endblock %}
