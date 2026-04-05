@@ -20,38 +20,6 @@
 - **Frontend:** HTML, Bootstrap (подразумевается структурой шаблонов)
 - **ORM:** Django Models
 
-## 📁 Структура проекта
-
-MyProject/
-├── MyProject/ # Основная конфигурация Django
-│ ├── init.py
-│ ├── settings.py # Настройки проекта
-│ ├── urls.py # Главные маршруты
-│ ├── asgi.py / wsgi.py
-├── trening/ # Основное приложение
-│ ├── migrations/ # Миграции БД
-│ ├── templates/trening/ # HTML-шаблоны
-│ │ ├── base.html
-│ │ ├── home.html
-│ │ ├── cards_list.html
-│ │ ├── categories.html
-│ │ ├── category_detail.html
-│ │ ├── karti.html
-│ │ ├── lesson_detail.html
-│ │ ├── quiz.html
-│ │ ├── quiz_results.html
-│ │ └── help.html
-│ ├── init.py
-│ ├── admin.py
-│ ├── apps.py
-│ ├── models.py # Модели (Категории, Карточки, Уроки, Квизы)
-│ ├── views.py # Логика обработки запросов
-│ ├── urls.py # Маршруты приложения
-│ ├── create_test_data.py # Скрипт для генерации тестовых данных
-├── db.sqlite3 # База данных
-├── manage.py # Утилита управления Django
-
-
 ## 🚀 Быстрый старт
 
 ### 1. Клонирование репозитория
